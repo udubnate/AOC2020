@@ -14,7 +14,7 @@ for line in data:
     #sort to make sure you count all
     valuearr = sorted(value)
     value = "".join(valuearr)
-    regexp = letter + '{' + range[0] + ',' + range[1] + '}'
+    regexp = '[' + letter + ']' + '{' + range[0] + ',' + range[1] + '}'
     p = re.compile(regexp)
     ptest = p.search(value)
     if ptest:
