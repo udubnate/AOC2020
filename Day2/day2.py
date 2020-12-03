@@ -11,12 +11,12 @@ for line in data:
     range = arr[0].split('-')
     letter = arr[1].replace(':','')
     value = arr[2].replace('\n','')
-    #sort to make sure you count all
-    valuearr = sorted(value)
-    value = "".join(valuearr)
-    regexp = '[' + letter + ']' + '{' + range[0] + ',' + range[1] + '}'
-    p = re.compile(regexp)
-    ptest = p.search(value)
-    if ptest:
+    #ncount count of matches
+    ncount = 0
+    for n in value:
+        if n == letter:
+            ncount += 1
+    if int(range[0]) <= ncount <= int(range[1]):
         count += 1
+
 print(count)
