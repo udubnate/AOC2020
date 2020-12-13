@@ -14,7 +14,7 @@ for kvp in iyr_tests:
     testresults = isvalid_iyr(kvp) == iyr_tests[kvp]
     print(kvp + " test results are " + str(testresults))
 
-eyr_tests = {'2019': False, '2020': True, '2030': True, '2031': False}
+eyr_tests = {'2019': False, '2020': True, '2030': True, '2031': False, '02030': False}
 
 print("EYR Tests")
 for kvp in eyr_tests:
@@ -31,8 +31,15 @@ for kvp in hgt_tests:
 hcl_tests = {'#123abc': True, '#123abz': False, '123abc': False}
 
 print("HCL Tests")
-for kvp in hgt_tests:
+for kvp in hcl_tests:
     testresults = isvalid_hcl(kvp) == hcl_tests[kvp]
+    print(kvp + " test results are " + str(testresults))
+
+pid_tests = {'123456789': True, '01123456789': False, '123abc': False}
+
+print("pid test")
+for kvp in pid_tests:
+    testresults = isvalid_pid(kvp) == pid_tests[kvp]
     print(kvp + " test results are " + str(testresults))
 
 

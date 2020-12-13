@@ -2,7 +2,7 @@
 import re
 from validation import *
 
-with open('day4sampleinvalid.txt','r') as file:
+with open('day4.txt','r') as file:
     data = file.readlines()
 
 # 2D array of passports
@@ -20,7 +20,7 @@ for line in data:
 
     for info in passportinfos:
         entry = info.split(':')
-        passport[entry[0]] = entry[1]
+        passport[entry[0]] = entry[1].replace('\n','')
 
 # add last entry
 passports.append(passport)
@@ -35,14 +35,21 @@ def check_validity(passport):
         if field not in item:
             return False
     # additional requirements
-    if not isvalid_byr(passport['byr']): return False
-    if not isvalid_iyr(passport['iyr']): return False
-    if not isvalid_eyr(passport['eyr']): return False
-    if not isvalid_hgt(passport['hgt']): return False
-     
-    # Need Eye Color to match this regex
-    # ^#[a-zA-Z0-9]{6}$
-    
+    if not isvalid_byr(passport['byr']):
+        return False
+    if not isvalid_iyr(passport['iyr']):
+        return False
+    if not isvalid_eyr(passport['eyr']): 
+        return False
+    if not isvalid_hgt(passport['hgt']): 
+        return False
+    if not isvalid_hcl(passport['hcl']): 
+        return False
+    if not isvalid_ecl(passport['ecl']): 
+        return False
+    if not isvalid_pid(passport['pid']): 
+        return False
+
     return True
 
 for item in passports:
