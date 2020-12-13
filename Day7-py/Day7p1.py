@@ -12,12 +12,51 @@ def get_num_bags(color):
 
     if len(lines) == 0:
         return []
-
     else:
-        colors = [ lines[:line.index(' bags')]]
+        colors = [ line[:line.index(' bags')] for line in lines ]
+        #recursive part
+        colors = [ color for color in colors if color not in allColors]
 
-    for line in lines:
-        print(line)
+        for color in colors:
+            allColors.append(color)
+            bags = get_num_bags(color)
+
+            allColors += bags
+
+        #get unique
+        uniqueColors = []
+        for color in allColors:
+            if color not in uniqueColors:
+                uniqueColors.append(color)
+    
+        return uniqueColors
 
 
-get_num_bags('shiny gold')
+colors = get_num_bags('shiny gold')
+print(len(colors))
+
+#part 2
+def get_bag_count(color):
+    rule = ''
+    for line in data:
+        if line[:line.index(' bags')] == color:
+            rule = line
+
+    if 'no' in rule:
+        return 1
+
+    rule = rule[rule.index('contain')+8:].split()
+
+    i = 0
+    total = 0
+    while i < len(rule):
+        count = int(rule[i])
+        color = rule[i+1] + ' ' + rule[i+2]
+        i += 4
+
+        total += count * get_bag_count(color)
+    
+    return total+1
+
+count = get_bag_count('shiny gold')
+print(str(count-1))

@@ -1,44 +1,36 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace Day7
 {
-    class ParseInput
+    static class ParseInput
     {
-        internal static List<Luggage> Parse(string filepath){
-            var result = new List<Luggage>();
+        public static IEnumerable<string> Words(this string input)
+        {
+            return input.Split(new string[] { " ", "\t", Environment.NewLine, ",", "\n" }, StringSplitOptions.RemoveEmptyEntries);
+        }
+
+        public static (string Bag, Dictionary<string, int> Contents) Parse(string line){
             
-            var containRegex = new Regex(@"^(?<container>.*) bags contain (?<containees>.*)\.$");
-            var containeesRegex = new Regex(@"(?<number>\d*) (?<description>.+) bag");
+            var words = ParseInput.Words(line).ToList();
 
-            foreach(var line in File.ReadAllLines(filepath)){
-                var containResult= containRegex.Match(line);
-                //parent luggage
-                var luggage = new Luggage(1, containResult.Groups["container"].Value);
-                var containees = containResult.Groups["containees"].Value;
+            var bag = $"{words[0]} {words[1]}";
+            var contents = new Dictionary<string, int>();
 
-                if (containees == "no other bags"){
-                    result.Add(luggage);
-                    continue;
+            for (var i = 4; i < words.Count; i += 4)
+            {
+                if (words[i] != "no")
+                {
+                    contents.Add($"{words[i + 1]} {words[i + 2]}", int.Parse(words[i]));
                 }
-
-                var parts = containees.Split(", ");
-                foreach (var part in parts){
-
-                    var containeeResult = containeesRegex.Match(part);
-                    var containeeNumber = int.Parse(containeeResult.Groups["number"].Value);
-                    var containeeDescription = containeeResult.Groups["description"].Value;
-
-                    var containee = new Luggage(containeeNumber, containeeDescription);
-
-                    luggage.Contains.Add(containee);
-                }
-                result.Add(luggage);
             }
 
-            return result;
+            return (bag, contents);
         }
+
+         
     }
 }
