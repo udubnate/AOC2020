@@ -13,11 +13,11 @@ namespace Day9
             this.FilePath = filePath;
         }
 
-        public List<int> Parse(){
+        public List<double> Parse(){
             //using statement to close out streamReader after use
             using (StreamReader sr = new StreamReader(this.FilePath))
             {
-                var list = new List<int>();
+                var list = new List<double>();
 
                 while (true)
                 {
@@ -25,7 +25,7 @@ namespace Day9
                     //end with EOF
                     if (string.IsNullOrEmpty(line)) break;
 
-                    int val = Convert.ToInt32(line);
+                    double val = Convert.ToDouble(line);
 
                     list.Add(val);
                 }

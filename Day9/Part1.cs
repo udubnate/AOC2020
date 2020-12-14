@@ -5,15 +5,15 @@ namespace Day9
 {
     class Part1
     {
-        public List<int> inputList {get; set;}
+        public List<double> inputList {get; set;}
         public int preamble {get; set;}
-        public Part1(List<int> list, int premable)
+        public Part1(List<double> list, int premable)
         {
             this.inputList = list;
             this.preamble = premable;
         }
 
-        public int Execute(){
+        public double Execute(){
             
             //ptr for look back
             var prestart = 0;
@@ -22,7 +22,7 @@ namespace Day9
             for (int i = preamble; i < inputList.Count; i++)
             {
                 if  (!sumPrevious(prestart, prestop, inputList[i])){
-                    return i;
+                    return inputList[i];
                 } 
                 prestart++; 
                 prestop++;
@@ -31,13 +31,13 @@ namespace Day9
             return -1;
         }
 
-        public bool sumPrevious(int prestart, int prestop, int val){
+        public bool sumPrevious(int prestart, int prestop, double val){
 
-            for (int i = 0; i < inputList.Count; i++)
+            for (int i = prestart; i < prestop; i++)
             {
-                for (int j = 0; j < inputList.Count; j++)
+                for (int j = prestart; j < prestop; j++)
                 {
-                    if (inputList[i] + inputList[j] == val){
+                    if (inputList[i] + inputList[j] == val && i != j){
                         return true;
                     }
                 }
