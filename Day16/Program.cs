@@ -1,9 +1,11 @@
 ﻿using System;
 
-namespace Day15
+namespace Day16
 {
     class Program
     {
+         class Program
+        {
          static readonly string FilePath = "Day15.txt";
          static readonly long StopAt = 30000000;
         static void Main(string[] args)
