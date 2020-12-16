@@ -5,61 +5,112 @@ namespace Day16
 {
     class Part2
     {
-        public List<int> inputList { get; set; }
+        public Document Doc { get; set; }
 
-        public Part2(List<int> list)
+        public Part2(Document doc)
         {
-            this.inputList = list;
+            this.Doc = doc;
         }
 
-        public long Execute(long stopAt)
+        public long Execute()
         {
-            
-            var count = inputList.Count;
-            var dict = new Dictionary<int, List<int>>();
-
-            for (int i = 0; i < inputList.Count; i++)
+            List<int> exceptionList = new List<int>();
+            List<int> greaterThan = new List<int>();
+            List<int> lessThan = new List<int>();
+            int stopCalc = 0;
+            // add Rules to a validate list
+            foreach (var rule in Doc.ruleList)
             {
-                AddMap(dict, inputList[i], i);
-            }
-            
-
-
-            while (count < stopAt){
-                
-                // check previous
-                int previous = inputList[^1];
-                //find all spoken
-                 if (dict.ContainsKey(previous) && dict[previous].Count > 1){
-                    var val = dict[previous][^1] - dict[previous][^2];
-                    inputList.Add(val);
-                    AddMap(dict, val, count);
+                foreach (var range in rule.ranges)
+                {
+                    greaterThan.Add(range[0]);
+                    lessThan.Add(range[1]);
                 }
-                else {
-                    inputList.Add(0);
-                    AddMap(dict, 0, count);
+            }
+
+            List<int> nearbyStops = new List<int>();
+            List<Ticket> ticketsToRemove = new List<Ticket>();
+
+            foreach (var nearby in Doc.nearbyTickets)
+            {
+                foreach (int stop in nearby.Values)
+                {
+                    bool InRange = false;
+                    for (int i = 0; i < greaterThan.Count; i++)
+                    {
+                        if (stop >= greaterThan[i] && stop <= lessThan[i])
+                        {
+                            InRange = true;
+                            break;
+                        }
+                        else
+                        {
+                            continue;
+                        }
+                    }
+                    if (!InRange)
+                    {
+                        exceptionList.Add(stop);
+                        stopCalc += stop;
+                        ticketsToRemove.Add(nearby);
+                    }
                 }
-                count++;
             }
-            //printList();
-            return inputList[count-1];
 
-           //throw new Exception("Not implemented yet");
-        }
-
-
-        public void printList(){
-            Console.WriteLine(string.Join(',', inputList));
-        }
-
-        public void AddMap(Dictionary<int, List<int>> map, int key, int value){
-            if (map.ContainsKey(key)){
-                map[key].Add(value);
-
-            } else {
-                map.Add(key, new List<int>());
-                map[key].Add(value);
+            // remove invalid tickets
+            foreach (var ticket in ticketsToRemove){
+                Doc.nearbyTickets.Remove(ticket);
             }
+
+            int TicketRange = Doc.nearbyTickets[0].Values.Count;
+            var classdict = new Dictionary<string, int>();
+            //Test which group of numbers match which Rule
+            foreach(var rule in Doc.ruleList){
+               
+                for (int i = 0; i < TicketRange; i++)
+                {
+                    bool InRange = false;
+                     List<bool> rangelist = new List<bool>();
+
+                    foreach (var ticket in Doc.nearbyTickets){
+                        
+                        if (rule.ranges[0][0] <= ticket.Values[i] && rule.ranges[0][1] >= ticket.Values[i]){
+                            InRange = true;
+                            rangelist.Add(InRange);
+                        }
+                        else if (rule.ranges[1][0] <= ticket.Values[i] && rule.ranges[1][1] >= ticket.Values[i]){
+                            InRange = true;
+                            rangelist.Add(InRange);
+                        }
+                    } 
+
+                     if (rangelist.Count == Doc.nearbyTickets.Count){
+                        Console.WriteLine(rule.Name + " :  "+  i);
+                        classdict.Add(rule.Name, i);
+                        break;
+                    }   
+                }
+               
+            }
+            int calc = 0;
+            int stopAt = 6;
+            int count = 0;
+            foreach (var rule in Doc.ruleList){
+                if (classdict.ContainsKey(rule.Name)){
+                    int pos = classdict[rule.Name];
+                    Console.WriteLine(rule.Name + " : " + pos);
+                    Console.WriteLine(Doc.yourTicket.Values[pos]);
+                    calc += Doc.yourTicket.Values[pos];
+                    count++;
+
+                    if (count == stopAt) break;
+                   // Doc.yourTicket.Values[classdict[rule.name]];
+                }
+            }
+            // now associate your ticket with 
+            return calc;
+            throw new Exception("Not implemented yet");
         }
+
     }
 }

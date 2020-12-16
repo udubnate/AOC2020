@@ -5,59 +5,59 @@ namespace Day16
 {
     class Part1
     {
-        public List<int> inputList { get; set; }
+        public Document Doc { get; set; }
 
-        public Part1(List<int> list)
+        public Part1(Document doc)
         {
-            this.inputList = list;
+            this.Doc = doc;
         }
 
-        public long Execute(int stopAt)
+        public long Execute()
         {
-            
-            
-            for (int i = 0; i < inputList.Count; i++)
+            List<int> exceptionList = new List<int>();
+            List<int> greaterThan = new List<int>();
+            List<int> lessThan = new List<int>();
+            int stopCalc = 0;
+            // add Rules to a validate list
+            foreach (var rule in Doc.ruleList)
             {
-                
-            }
-            int count = inputList.Count;
-            var dict = new Dictionary<int, int>();
-
-            while (count < stopAt){
-                
-                // check previous
-                int previous = inputList[count-1];
-                //find all spoken
-                var indexes = findAllIndex(previous);
-                if (indexes.Count < 2){
-                    inputList.Add(0);
+                foreach (var range in rule.ranges)
+                {
+                    greaterThan.Add(range[0]);
+                    lessThan.Add(range[1]);
                 }
-                else {
-                    var val = indexes[indexes.Count -1 ] - indexes[indexes.Count -2 ];
-                    inputList.Add(val);
-                }
-                count++;
             }
-            printList();
-            return inputList[count-1];
 
-           //throw new Exception("Not implemented yet");
-        }
+            List<int> nearbyStops = new List<int>();
 
-        public List<int> findAllIndex(int number){
-            var list = new List<int>();
-            for (int i = 0; i < inputList.Count; i++)
+            foreach (var nearby in Doc.nearbyTickets)
             {
-                if (inputList[i] == number){
-                    list.Add(i);
+                foreach (int stop in nearby.Values)
+                {
+                    bool InRange = false;
+                    for (int i = 0; i < greaterThan.Count; i++)
+                    {
+                        if (stop >= greaterThan[i] && stop <= lessThan[i])
+                        {
+                            InRange = true;
+                            break;
+                        }
+                        else
+                        {
+                            continue;
+                        }
+                    }
+                    if (!InRange)
+                    {
+                        exceptionList.Add(stop);
+                        stopCalc += stop;
+                    }
                 }
-                
             }
-            return list;
+
+            return stopCalc;
+            throw new Exception("Not implemented yet");
         }
 
-        public void printList(){
-            Console.WriteLine(string.Join(',', inputList));
-        }
     }
 }
