@@ -4,7 +4,7 @@ namespace Day10
 {
     class Program
     {
-        static readonly string FilePath = "sample.txt";
+        static readonly string FilePath = "Day10.txt";
         static void Main(string[] args)
         {
            var input = new Input(FilePath);
@@ -14,9 +14,9 @@ namespace Day10
             var output = p1.Execute();
             Console.WriteLine(output);
 
-            /* Part2 p2 = new Part2(list, output);
+            Part2 p2 = new Part2(list);
             var part2 = p2.Execute();
-            Console.WriteLine(part2); */
+            Console.WriteLine(part2);
         }
 
     }
